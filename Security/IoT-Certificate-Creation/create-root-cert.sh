@@ -12,20 +12,57 @@
 # Pre-requisites: Run the create-filesystem script first.
 ###############################################################################
 
-if [ $# -ne 2 ]; then
-    echo "Usage: create-root-cert <root-folder> <cert-name>"
+show_help() {
+    echo "Command"
+    echo "  create-root-cert: Create a new X.509 root certificate that can be used to authenticate devices connecting to an IoT Hub."
+    echo "      More information can be found in the IoT Hub documentation, see https://docs.microsoft.com/azure/iot-hub/iot-hub-x509ca-overview/"
+    echo ""
+    echo "Arguments"
+    echo "  --root-folder -r    [Required] : Name of the folder where the certificates will be stored."
+    echo "  --cert-name -c      [Required] : Name of the X.509 root certificate to be created." 
+    echo "  --help -h                      : Shows this help message and exit."
+}
+
+pwd_file=""
+root_folder=""
+root_cert_name=""
+
+OPTS=`getopt -n 'parse-options' -o hr:c:p: --long help,root-folder:,cert-name:,password-file: -- "$@"`
+
+eval set -- "$OPTS"
+
+#extract options and their arguments into variables
+while true ; do
+    case "$1" in
+        -h | --help )
+            show_help
+            exit 0
+            ;;
+        -r | --root-folder )
+            root_folder="$2/ca"; shift 2 ;;
+        -c | --cert-name )
+            root_cert_name="$2-root"; shift 2 ;;
+        -p | --password-file )
+            pwd=`cat "$2"`; shift 2 ;; 
+        \? )
+            echo "Invalid Option"
+            exit 0
+            ;;
+        --) shift; break;;
+        *) break;;
+    esac
+done
+
+if [[ -z "$root_folder" || -z "$root_cert_name" ]]; then
+    show_help
     exit 1
 fi
 
-# IFS= read -s -p Password: pwd
-pwd="MniMSuAadR01!"
-
-root_folder="${1}/ca"
-root_cert_name="${2}-root"
+if [ -z "$pwd" ]; then
+    IFS= read -s -p Password: pwd
+fi
 
 cd ${root_folder}
-
-
 
 # write the root directory and the certificate name in the cnf file
 sed -i "8s\\dir_place_holder\\${root_folder}\\" openssl.cnf

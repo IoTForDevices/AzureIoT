@@ -13,8 +13,11 @@
 if [ $# -ne 1 ]; then
     echo "Usage: create-filesystem <root-folder>"
     exit 1
+else
+    echo $1
 fi
 
+script_folder=`dirname "$0"`
 root_folder="${1}"
 ca_root_folder="${root_folder}/ca"
 intermediate_folder="${ca_root_folder}/intermediate"
@@ -31,14 +34,13 @@ chmod 700 ${ca_root_folder}/private
 mkdir ${ca_root_folder}/certs
 mkdir ${ca_root_folder}/newcerts
 
-cp openssl.cnf ${ca_root_folder}
+cp ${script_folder}/openssl.cnf ${ca_root_folder}
 
 touch ${ca_root_folder}/index.txt
 touch ${ca_root_folder}/index.txt.attr
 echo 1000 > ${ca_root_folder}/serial
 
 # Create the intermediate CA file structure
-
 mkdir ${intermediate_folder}
 
 mkdir ${intermediate_folder}/crl
@@ -48,11 +50,9 @@ chmod 700 ${intermediate_folder}/private
 mkdir ${intermediate_folder}/certs
 mkdir ${intermediate_folder}/newcerts
 
-cp openssl_intermediate.cnf ${intermediate_folder}/openssl.cnf
+cp ${script_folder}/openssl_intermediate.cnf ${intermediate_folder}/openssl.cnf
 
 touch ${intermediate_folder}/index.txt
 touch ${intermediate_folder}/index.txt.attr
 echo 1000 > ${intermediate_folder}/serial
 echo 1000 > ${intermediate_folder}/crlnumber
-
-
