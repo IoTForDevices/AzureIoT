@@ -12,25 +12,64 @@
 # certificate to your IoT Hub and you must have generated a verification code.
 ###########################################################################################
 
+show_help() {
+    echo "Command"
+    echo "  create-device-cert: Create a new X.509 device certificate that can be used to authenticate devices connecting to an IoT Hub."
+    echo "      More information can be found in the IoT Hub documentation, see https://docs.microsoft.com/azure/iot-hub/iot-hub-x509ca-overview/"
+    echo ""
+    echo "Arguments"
+    echo "  --root-folder -r    [Required] : Name of the folder where the certificates will be stored."
+    echo "  --cert-name -c      [Required] : Name of the X.509 root certificate to be created." 
+    echo "  --device-id -d      [Required] : Name of the device identity for the new device."
+    echo "  --help -h                      : Shows this help message and exit."
+    echo ""
+    echo "NOTE: You must already have a X.509 root certificate with the same name to be able to sign this X.509 intermediate certificate"
+    echo "      to be able to create a chain of trust."
+}
 
-# NOTE: Individual commands are now working, but need to deal properly with passwords.
-#       Use intermediate certificate uploaded to IoT Hub
-#       Use entire intermediate certificate chain for proof of posession with verification cert.
-#       For demo purposes would be great to call the whole chain of scripts from one master script
-#       Also need a second intermediate certificate based on the first intermediate cert
+pwd_file=""
+root_folder=""
+device_cert_name=""
+chain_cert_name=""
+cn_name=""
 
-if [ $# -ne 3 ]; then
-    echo "Usage: create-verification-cert <root-folder> <intermediate-ca-name> <device-name>"
+OPTS=`getopt -n 'parse-options' -o hr:c:d: --long help,root-folder:,cert-name:,device-id: -- "$@"`
+
+eval set -- "$OPTS"
+
+#extract options and their arguments into variables
+while true ; do
+    case "$1" in
+        -h | --help )
+            show_help
+            exit 0
+            ;;
+        -r | --root-folder )
+            root_folder="$2/ca"; shift 2 ;;
+        -c | --cert-name )
+            chain_cert_name="$2-chain"; shift 2 ;;
+        -d | --device-id )
+            device_cert_name="$2-device"
+            cn_name="/CN=$2"; shift 2 ;;
+        -p | --password-file )
+            pwd=`cat "$2"`; shift 2 ;; 
+        \? )
+            echo "Invalid Option"
+            exit 0
+            ;;
+        --) shift; break;;
+        *) break;;
+    esac
+done
+
+if [[ -z "$root_folder" || -z "$chain_cert_name" || -z "$device_cert_name" ]]; then
+    show_help
     exit 1
 fi
 
-# IFS= read -s -p Password: pwd
-pwd="MniMSuAadR01!"
-
-root_folder="${1}/ca"
-device_cert_name="${3}-device"
-chain_cert_name="${2}-chain"
-cn_name="/CN=${3}"
+if [ -z "$pwd" ]; then
+    IFS= read -s -p Password: pwd
+fi
 
 cd ${root_folder}
 
