@@ -3,11 +3,13 @@
 ## Copyright (c) IoTForDevices. All rights reserved.
 ## Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-###################################################################################
+#######################################################################################
 # This script creates a X.509 root certificate and X.509 intermediate certificate
-# and installs the intermediate certificate in an IoT Hub. After that, the authenticy
+# and installs the intermediate certificate in an IoT Hub. After that, the authenticity
 # of the certificate is validated.
-###################################################################################
+#
+# Prerequisites: IoT Hub has been created already.
+#######################################################################################
 
 show_help() {
     echo "Command"

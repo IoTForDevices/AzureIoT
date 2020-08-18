@@ -4,9 +4,12 @@
 ## Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 ###################################################################################
-# This script creates adds a device identity to an IoT Hub and generates
+# This script adds a device identity to an IoT Hub and generates
 # a X.509 device certificate that will be verified with the X.509 CA chain
 # for the particular IoT Hub.
+#
+# Prerequisites: IoT Hub must exist and already contain a valid X.509 certificate
+#                that can act as root for the device certificate.
 ###################################################################################
 
 show_help() {
