@@ -53,5 +53,5 @@ Exiting...
 ```
 
 ## Using OpenSSL
-The workflow described here is good for test purposes and to secure IoT maker solutions. Here is a good article on using OpenSSL.
+The workflow described here is good for test purposes and to secure IoT maker solutions. Here is a [nice simple article on using OpenSSL](https://blog.ipswitch.com/how-to-use-openssl-to-generate-certificates).
 In Enterprise Environments, it is strongly advices to make use of X.509 certificates from a root certificate authority (CA).
