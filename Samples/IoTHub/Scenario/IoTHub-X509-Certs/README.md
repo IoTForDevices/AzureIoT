@@ -62,6 +62,8 @@ Device sending 5 messages to IoTHub...
 Exiting...    
 ```
 
+> NOTE: The code sample can also run on Windows inside a command prompt, but you do need a copy of the generated device certificate, since that can only be generated in Linux for this example.
+
 ## Using OpenSSL
 The workflow described here is good for test purposes and to secure IoT maker solutions. Here is a [nice simple article on using OpenSSL](https://blog.ipswitch.com/how-to-use-openssl-to-generate-certificates).
 In Enterprise Environments, it is strongly advices to make use of X.509 certificates from a root certificate authority (CA).
