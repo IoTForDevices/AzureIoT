@@ -32,6 +32,7 @@ iot_hub=""
 root_folder=""
 certificate_name=""
 device_id=""
+common_script_root="../../Scripts/IoTHub-X509-Certs"
 
 OPTS=`getopt -n 'parse-options' -o hi:r:c:d: --long help,iot-hub:,root-folder:,cert-name:,device-id: -- "$@"`
 
@@ -72,7 +73,7 @@ echo ""
 echo "********************************************************"
 echo "Creating a new device identity for the specified IoT Hub"
 echo "********************************************************"
-./IoT-Certificate-Installation/create-device-identity.sh -i $iot_hub -d $device_id
+$common_script_root/IoT-Certificate-Installation/create-device-identity.sh -i $iot_hub -d $device_id
 
 # Create a new device certificate for the device identity
 echo ""
@@ -80,6 +81,6 @@ echo ""
 echo "***************************************"
 echo "Creating a new X.509 Device Certificate"
 echo "***************************************"
-./IoT-Certificate-Creation/create-device-cert.sh -r ${root_folder} -c ${certificate_name} -d $device_id
+$common_script_root/IoT-Certificate-Creation/create-device-cert.sh -r ${root_folder} -c ${certificate_name} -d $device_id
 
 exit 0

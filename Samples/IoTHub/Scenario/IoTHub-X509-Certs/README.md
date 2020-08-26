@@ -9,12 +9,22 @@ certificates can be found in the [Microsoft documentatation](https://docs.micros
 Pre-requisites: You must login to the right Azure subscription using az-cli prior to invoking the scripts. You also must have an IoT Hub ready to use.
 
 ## Workflow
+You will find a collection of scripts that will help you create X.509 certificates and install them on an IoT Hub.
 These scripts work in a Linux environment and have been tested with Ubuntu 18.04 LTS. The scripts should also work in WSL[2].
+
+The following folder structure is used:
+- AzureIoT (Repo Root)
+  - Samples
+    - IoTHub
+      - Code (Sample code, including simulated sample device with X.509 certificate)
+      - Scripts (scripts to create / install X.509 certificates)
+  - Scripts
+    -IoTHub-X509-Certs (helper scripts to create a X.509 certificate chain)
 
 1) Create all necessary certificates by invoking ```add-iothub-certificates.sh``` with proper parameters. You will be prompted for a password to protect the private key you are going to create.
 
 ``` bash
-./add-iothub-certificate.sh \
+Scripts/add-iothub-certificate.sh \
     --iot-hub iot-f-mst01 \
     --root-folder ~/ca-mst01 \
     --cert-name mst01    
@@ -23,7 +33,7 @@ These scripts work in a Linux environment and have been tested with Ubuntu 18.04
 2) Create device identies and corresponding X.509 device certificates by invoking ```add-iot-device.sh``` with proper parameters. You will be prompted for a password. Make sure to provide the same password that you enteded in step 1 of this description.
 
 ``` bash
- ./add-iot-device.sh \
+Scripts/add-iot-device.sh \
     --iot-hub iot-f-mst01 \
     --root-folder ~/ca-mst01 \
     --cert-name mst01 \
@@ -33,7 +43,7 @@ These scripts work in a Linux environment and have been tested with Ubuntu 18.04
 3) Test if a (simulated device) with the X.509 certificate can connect to the IoT Hub by running a simulated device from inside Visual Studio Code. You will be prompted by the application for the device-id, the IoT Hub name, an absolute path to the device certificate and the X.509 password. Prior to running the device simulator, you must have executed steps 1 and 2 of this description.
 
 ``` bash
-cd SimultedX509Device
+cd Code/SimultedX509Device
 dotnet restore
 dotnet run
     Enter device-id: dev-mst01
