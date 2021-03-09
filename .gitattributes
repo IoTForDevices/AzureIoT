@@ -1,0 +1,2 @@
+# Convert line endings to LF on checkout for bash scripts
+*.sh text eol=LF
